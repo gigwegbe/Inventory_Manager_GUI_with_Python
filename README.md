@@ -1,4 +1,4 @@
-# Inventory ManagerGUI with Python
+# Inventory Management System GUI with Python
 The repo contains the codebase of an Inventory Management System using PyQt.
 ![Inventory System](/asset/gui.gif) 
 
