@@ -7,13 +7,18 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QApplication 
 
 
-import sys 
+import sys, os
 from os import path
 from PyQt5.uic import loadUiType 
-
-FORM_CLASS, _ = loadUiType(path.join(path.dirname('__file__'), "main.ui"))
-
 import sqlite3 
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+FORM_CLASS, _ = loadUiType(resource_path("main.ui"))
+
 
 class Main(QMainWindow, FORM_CLASS): 
     def __init__(self, parent=None):
@@ -23,7 +28,7 @@ class Main(QMainWindow, FORM_CLASS):
         self.Handel_Buttons()
         self.NAVIGATE()
     
-    
+
     def Handel_Buttons(self):
         self.refresh_btn.clicked.connect(self.GET_DATA)
         self.search_btn.clicked.connect(self.SEARCH)
@@ -34,8 +39,8 @@ class Main(QMainWindow, FORM_CLASS):
     
 
     def GET_DATA(self): 
-        db = sqlite3.connect("final_parts_table.db")
-        cursor = db.cursor()
+        db = sqlite3.connect(resource_path("final_parts_table.db"))
+        cursor = db.cursor() 
 
         command = ''' SELECT * from data '''
         result = cursor.execute(command)
@@ -79,7 +84,7 @@ class Main(QMainWindow, FORM_CLASS):
 
 
     def SEARCH(self): 
-        db = sqlite3.connect("final_parts_table.db")
+        db = sqlite3.connect(resource_path("final_parts_table.db"))
         cursor = db.cursor()
 
         nbr = int(self.count_filter_txt.text())
@@ -94,7 +99,7 @@ class Main(QMainWindow, FORM_CLASS):
     
 
     def LEVEL(self): 
-        db = sqlite3.connect("final_parts_table.db")
+        db = sqlite3.connect(resource_path("final_parts_table.db"))
         cursor = db.cursor()
 
         command = ''' SELECT Reference, PartName, Count from data order by Count asc LIMIT 3'''
@@ -108,7 +113,7 @@ class Main(QMainWindow, FORM_CLASS):
 
     
     def NAVIGATE(self): 
-        db = sqlite3.connect("final_parts_table.db")
+        db = sqlite3.connect(resource_path("final_parts_table.db"))
         cursor = db.cursor()
 
         command = ''' SELECT * from data'''
@@ -126,7 +131,7 @@ class Main(QMainWindow, FORM_CLASS):
         self.count.setValue(val[8])
     
     def UPDATE(self): 
-        db = sqlite3.connect("final_parts_table.db")
+        db = sqlite3.connect(resource_path("final_parts_table.db"))
         cursor = db.cursor()
 
         id_ = int(self.id.text())
@@ -146,7 +151,7 @@ class Main(QMainWindow, FORM_CLASS):
 
 
     def DELETE(self): 
-        db = sqlite3.connect("final_parts_table.db")
+        db = sqlite3.connect(resource_path("final_parts_table.db"))
         cursor = db.cursor()
         d = self.id.text()
 
@@ -156,7 +161,7 @@ class Main(QMainWindow, FORM_CLASS):
 
 
     def ADD(self): 
-        db = sqlite3.connect("final_parts_table.db")
+        db = sqlite3.connect(resource_path("final_parts_table.db"))
         cursor = db.cursor()
 
         reference_ = self.reference.text()
@@ -172,13 +177,6 @@ class Main(QMainWindow, FORM_CLASS):
         command = ''' INSERT INTO data(Reference,PartName,MinArea,MaxArea,NumberOfHoles,MinDiameter,MaxDiameter,Count) VALUES (?,?,?,?,?,?,?,?)'''
         cursor.execute(command,row)
         db.commit()
-
-
-
-
-    
-
-
 
 def main(): 
     app = QApplication(sys.argv)

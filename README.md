@@ -5,4 +5,6 @@ The repo contains the codebase of an Inventory Management System using PyQt.
 Requirements: 
 - PyQt
 - SQLite 
-- SQLite Browser 
+- SQLite Browser
+- PyInstaller 
+- auto-py-to-exe
